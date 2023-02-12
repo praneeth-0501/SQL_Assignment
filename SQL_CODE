@@ -14,8 +14,8 @@ values (1,'X','Female','Finance'),
 
 select * from employees;
 select department,
-   count(case gender when 'male' then 1 end) as male,
-   count(case gender when 'female' then 1 end) as female
+   count(case gender when 'male' then 1 end) as 'Num of male',
+   count(case gender when 'female' then 1 end) as 'Num of female'
    from employees
 group by department;
 
@@ -51,7 +51,9 @@ delimiter $$
 	end if;
  end $$
 delimiter ;
-select name,greatest(jan,feb,mar), month_(greatest(jan,feb,mar),jan,feb,mar) as month  from sal_emp;
+select name,greatest(jan,feb,mar) as Value, 
+month_(greatest(jan,feb,mar),jan,feb,mar) as month  from sal_emp;
+
 
 
 -- ####################### question 3 ####################
@@ -67,9 +69,11 @@ insert into can_test values
 
 select * from can_test;
 
-select marks, dense_rank() over (order by marks desc) as Rank_,
+select marks, dense_rank() over (order by marks desc) as 'Rank',
 group_concat(candidate_id) as  candidate_id from can_test 
 group by marks;
+
+
 
 
 -- ##########################  question4 ####################################
@@ -95,4 +99,5 @@ values (45,'abc@gmail.com'),
 
  select * from repeated
  order by candidate_id desc;
+
 
