@@ -1,0 +1,98 @@
+-- ###################### question1 ###################################
+drop table if exists employees;
+create table employees (
+  EmpID int not null,
+  Name varchar(20),
+  Gender varchar(20),
+  Department varchar(20)
+);
+insert into employees
+values (1,'X','Female','Finance'),
+(2,'Y','Male','IT'),
+(3,'Z','Male','HR'),
+(4,'W','Female','IT');
+
+select * from employees;
+select department,
+   count(case gender when 'male' then 1 end) as male,
+   count(case gender when 'female' then 1 end) as female
+   from employees
+group by department;
+
+
+-- ######################## question2 ##################
+
+drop table  if exists sal_emp;
+create table sal_emp(
+   Name varchar(25) Not null,
+   jan int default 0,
+   feb int default 0,
+   mar int default 0,
+   primary key ( name)
+);
+
+insert into sal_emp values
+( 'X',5200,9093,3832),
+( 'Y',9023,8942,4000),
+( 'Z',9834,8197,9903),
+( 'W',3244,4321,0293);
+select * from sal_emp;
+drop function if exists month_;
+delimiter $$
+  create function month_(val int,jan int, feb int,mar int)
+  returns varchar(10) deterministic
+  begin 
+    if val=jan then 
+      return 'jan';
+	elseif val=feb then
+      return 'feb';
+	else
+      return 'mar';
+	end if;
+ end $$
+delimiter ;
+select name,greatest(jan,feb,mar), month_(greatest(jan,feb,mar),jan,feb,mar) as month  from sal_emp;
+
+
+-- ####################### question 3 ####################
+
+drop table if exists can_test;
+create table can_test(
+ candidate_id int not null,
+ marks int not null
+);
+
+insert into can_test values
+(1,98),(2,78),(3,87),(4,98),(5,78);
+
+select * from can_test;
+
+select marks, dense_rank() over (order by marks desc) as Rank_,
+group_concat(candidate_id) as  candidate_id from can_test 
+group by marks;
+
+
+-- ##########################  question4 ####################################
+drop table if exists repeated;
+create table repeated (
+   candidate_id int not null,
+   email varchar(30)
+);
+insert into repeated 
+values (45,'abc@gmail.com'),
+ (23,'def@yahoo.com'),
+ (34, 'abc@gmail.com'),
+ (21, 'bcf@gmail.com'),
+ (94, 'def@yahoo.com');
+ select * from repeated;
+ select min(Candidate_id)  as candidate_id, email
+ from repeated
+ group by email;
+ delete from repeated 
+ where  repeated.candidate_id not in (select * from(select min(Candidate_id)
+ from repeated 
+ group by email ) temp1);
+
+ select * from repeated
+ order by candidate_id desc;
+
