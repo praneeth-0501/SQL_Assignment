@@ -162,9 +162,66 @@ call marks_rank();
 
 
 ### Question 4:-
+1. Create table by using DDL create table command. Before creating table dropping a table if there is any table with that name.
+```
+drop table if exists repeated;
+create table repeated (
+   candidate_id int not null,
+   email varchar(30)
+);
+```
+2. By using desc command we can know properties of the table.
+```
+desc repeated;
+```
+<img width="352" alt="Screenshot 2023-02-13 at 2 29 57 PM" src="https://user-images.githubusercontent.com/123532043/218414604-ff3c0918-9f6d-4930-b38d-006604239097.png">
 
+3. Inserting rows into table repeated.
+```
+insert into repeated 
+values (45,'abc@gmail.com'),
+ (23,'def@yahoo.com'),
+ (34, 'abc@gmail.com'),
+ (21, 'bcf@gmail.com'),
+ (94, 'def@yahoo.com');
+```
+```
+select * from repeated;
+```
+<img width="342" alt="Screenshot 2023-02-13 at 2 30 25 PM" src="https://user-images.githubusercontent.com/123532043/218414696-081b1cda-60ef-430f-9768-ecec426749ac.png">
 
+4. First here I'm creating a select query to select rows not to be deleted using sub quries.
+```
+ select min(Candidate_id)  as candidate_id, email
+ from repeated
+ group by email;
+```
+<img width="280" alt="Screenshot 2023-02-13 at 2 33 23 PM" src="https://user-images.githubusercontent.com/123532043/218415298-bd46f4b3-e5d1-4c95-9329-7d0e2048a75b.png">
 
+5. Here minimum candidate_id selected from groups which are grouped by email.
+6. Procedure is created for deleting row.
+```
+drop procedure if exists del_row;
+ 
+ delimiter $$
+ create procedure del_row()
+ begin
+ delete from repeated 
+ where  repeated.candidate_id not in (select * from(select min(Candidate_id)
+ from repeated 
+ group by email ) temp1);
 
-
+end $$
+delimiter ;
+```
+7. Calling procedure.
+```
+call del_row();
+```
+8. Final Table.
+```
+select * from repeated
+ order by candidate_id desc;
+```
+<img width="208" alt="Screenshot 2023-02-13 at 2 35 51 PM" src="https://user-images.githubusercontent.com/123532043/218415845-38362e25-00ae-4155-ba15-afc812819ef9.png">
 
